@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Player1BehaviourScript.cs">
+    <Files>
+      <File FileName="Assets\DiskBehaviourScript.cs" Line="24" Column="42" />
+      <File FileName="Assets\Player2BehaviourScript.cs" Line="22" Column="31" />
+      <File FileName="Assets\Player1BehaviourScript.cs" Line="4" Column="21" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
