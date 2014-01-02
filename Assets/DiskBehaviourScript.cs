@@ -13,7 +13,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		initTransformPos = transform.position;
-		rigidbody.AddForce(10, 0, 10);
+		rigidbody.AddForce(12, 0, 12);
 	}
 
 	void freezeDisk(){
@@ -25,10 +25,10 @@ public class DiskBehaviourScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(p1Hold && freezeTimer <= 0){
-			p1Hold = false; freezeTimer = 1; rigidbody.AddForce(10, 0, 10); Debug.Log("Timer end!");
+			p1Hold = false; freezeTimer = 1; rigidbody.AddForce(12, 0, 10); Debug.Log("Timer end!");
 		}
 		else if(p2Hold && freezeTimer <= 0){
-			p2Hold = false; freezeTimer = 1; rigidbody.AddForce(-10, 0, -10); Debug.Log("Timer end!");
+			p2Hold = false; freezeTimer = 1; rigidbody.AddForce(-12, 0, -10); Debug.Log("Timer end!");
 		}
 
 
