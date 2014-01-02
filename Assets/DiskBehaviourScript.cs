@@ -2,24 +2,60 @@
 using System.Collections;
 
 public class DiskBehaviourScript : MonoBehaviour {
-	private float xSpeed = 0.135f;
-	private float zSpeed = 0.135f;
+
+	public static bool p1Hold = false;
+	public static bool p2Hold = false;
+
+	private float freezeTimer = 1;
+	private float cSpeed = 10;
+	private float sFactor = 10;
 	private Vector3 initTransformPos;
 	// Use this for initialization
 	void Start () {
 		initTransformPos = transform.position;
+		rigidbody.AddForce(10, 0, 10);
+	}
+
+	void freezeDisk(){
+		rigidbody.velocity = Vector3.zero;
+		rigidbody.angularVelocity = Vector3.zero;
+		rigidbody.Sleep();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Translate(xSpeed,0,zSpeed);
+		if(p1Hold && freezeTimer <= 0){
+			p1Hold = false; freezeTimer = 1; rigidbody.AddForce(10, 0, 10); Debug.Log("Timer end!");
+		}
+		else if(p2Hold && freezeTimer <= 0){
+			p2Hold = false; freezeTimer = 1; rigidbody.AddForce(-10, 0, -10); Debug.Log("Timer end!");
+		}
+
+
+		if(p1Hold){
+			transform.position = new Vector3(GameObject.Find("Player1").transform.position.x + 1.1f, transform.position.y, GameObject.Find("Player1").transform.position.z);
+			freezeTimer -= Time.deltaTime;
+		}
+		else if(p2Hold){
+			transform.position = new Vector3(GameObject.Find("Player2").transform.position.x - 1.1f, transform.position.y, GameObject.Find("Player2").transform.position.z);
+			freezeTimer -= Time.deltaTime;
+		}
+		else if (!p1Hold && !p2Hold){
+			Vector3 cvel = rigidbody.velocity;
+			Vector3 tvel = cvel.normalized * cSpeed;
+			rigidbody.velocity = Vector3.Lerp(cvel, tvel, Time.deltaTime * sFactor);
+		}
 	}
 
 	void OnCollisionEnter (Collision col){
-		if(col.gameObject.name == "TopBorder" || col.gameObject.name == "BottomBorder")
-			zSpeed *= -1;
-		if(col.gameObject.name == "Player1" || col.gameObject.name == "Player2")
-			xSpeed *= -1;
+		if(col.gameObject.name == "Player1" ){
+			freezeDisk();
+			p1Hold = true;
+		}
+		if(col.gameObject.name == "Player2" ){
+			freezeDisk();
+			p2Hold = true;
+		}
 		if(col.gameObject.name == "LeftBorder" || col.gameObject.name == "RightBorder")
 			transform.position = initTransformPos;
 	}

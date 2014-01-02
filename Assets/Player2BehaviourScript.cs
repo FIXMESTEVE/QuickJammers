@@ -10,17 +10,19 @@ public class Player2BehaviourScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKey(KeyCode.UpArrow)){
-			transform.Translate(0, 0, playerSpeed);
-		}
-		if(Input.GetKey(KeyCode.DownArrow)){
-			transform.Translate(0, 0, -playerSpeed);
-		}
-		if(Input.GetKey(KeyCode.LeftArrow)){
-			transform.Translate(-playerSpeed, 0, 0);
-		}
-		if(Input.GetKey(KeyCode.RightArrow)){
-			transform.Translate(playerSpeed, 0, 0);
+		if(!DiskBehaviourScript.p1Hold){
+			if(Input.GetKey(KeyCode.UpArrow)){
+				transform.Translate(0, 0, playerSpeed);
+			}
+			if(Input.GetKey(KeyCode.DownArrow)){
+				transform.Translate(0, 0, -playerSpeed);
+			}
+			if(Input.GetKey(KeyCode.LeftArrow)){
+				transform.Translate(-playerSpeed, 0, 0);
+			}
+			if(Input.GetKey(KeyCode.RightArrow)){
+				transform.Translate(playerSpeed, 0, 0);
+			}
 		}
 	}
 }
