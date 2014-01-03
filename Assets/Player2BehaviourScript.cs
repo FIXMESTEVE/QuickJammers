@@ -10,7 +10,7 @@ public class Player2BehaviourScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!DiskBehaviourScript.p2Hold){
+		if(!DiskBehaviourScript.p2Hold && !DiskBehaviourScript.p2Recovery){
 			if(Input.GetKey(KeyCode.UpArrow)){
 				transform.Translate(0, 0, playerSpeed);
 			}
@@ -36,7 +36,7 @@ public class Player2BehaviourScript : MonoBehaviour {
 			else
 				DiskBehaviourScript.relaunchState = DiskRelaunchState.STRAIGHT;
 
-			if(Input.GetKey(KeyCode.RightCommand))
+			if(Input.GetKey(KeyCode.RightControl))
 				DiskBehaviourScript.relaunched = true;
 		}
 	}

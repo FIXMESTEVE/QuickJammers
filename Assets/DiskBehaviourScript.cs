@@ -7,16 +7,25 @@ public enum DiskRelaunchState{
 
 public class DiskBehaviourScript : MonoBehaviour {
 
+	//global variables
 	public static bool p1Hold = false;
 	public static bool p2Hold = false;
+	public static bool p1Recovery = false;
+	public static bool p2Recovery = false;
 	public static bool relaunched = false;
 	public static DiskRelaunchState relaunchState = DiskRelaunchState.STRAIGHT;
 
+	//scores
 	private int p1Score = 0; private int p2Score = 0;
+
+	//timers
 	private float freezeTimer = 1;
-	private float recoveryTimer = 1.2f;
+	private float p1RecoveryTimer = 0.2f;
+	private float p2RecoveryTimer = 0.2f;
+	
 	private float cSpeed = 20;
 	private Vector3 initTransformPos;
+
 	// Use this for initialization
 	void Start () {
 		p1Hold = true;
@@ -62,14 +71,38 @@ public class DiskBehaviourScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if((p1Hold && freezeTimer <= 0) || (p1Hold && relaunched)){
+			p1Recovery = true;
 			relaunchDisk();
-			p1Hold = false; freezeTimer = 1; relaunched =  false;
-			Debug.Log("Timer end!");
+			p1Hold = false;
+			freezeTimer = 1;
+			relaunched = false;
+			Debug.Log("p1Hold timer end!");
 		}
 		else if((p2Hold && freezeTimer <= 0) || (p2Hold && relaunched)){
+			p2Recovery = true;
 			relaunchDisk();
-			p2Hold = false; freezeTimer = 1; relaunched = false;
-			Debug.Log("Timer end!");
+			p2Hold = false;
+			freezeTimer = 1;
+			relaunched = false;
+			Debug.Log("p2Hold timer end!");
+		}
+
+		if(p1Recovery){
+			if(p1RecoveryTimer > 0)
+				p1RecoveryTimer -= Time.deltaTime;
+			else{
+				p1Recovery = false;
+				p1RecoveryTimer = 0.2f;
+			}
+		}
+
+		if(p2Recovery){
+			if(p2RecoveryTimer > 0)
+				p2RecoveryTimer -= Time.deltaTime;
+			else{
+				p2Recovery = false;
+				p2RecoveryTimer = 0.2f;
+			}
 		}
 
 		//If the player catches the ball, we position it in front of him

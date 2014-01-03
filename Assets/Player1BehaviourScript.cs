@@ -10,18 +10,26 @@ public class Player1BehaviourScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!DiskBehaviourScript.p1Hold){
+		if(!DiskBehaviourScript.p1Hold && !DiskBehaviourScript.p1Recovery){
 			if(Input.GetKey(KeyCode.Z)){
 				transform.Translate(0, 0, playerSpeed);
+				if(transform.position.z + transform.renderer.bounds.size.z > GameObject.Find("TopBorder").transform.position.z)
+					transform.Translate(0, 0, -playerSpeed);
 			}
 			if(Input.GetKey(KeyCode.S)){
 				transform.Translate(0, 0, -playerSpeed);
+				if(transform.position.z < GameObject.Find("BottomBorder").transform.position.z + GameObject.Find("BottomBorder").renderer.bounds.size.z)
+					transform.Translate(0, 0, playerSpeed);
 			}
 			if(Input.GetKey(KeyCode.Q)){
 				transform.Translate(-playerSpeed, 0, 0);
+				if(transform.position.x < GameObject.Find("LeftBorder").transform.position.x + GameObject.Find("LeftBorder").renderer.bounds.size.x)
+					transform.Translate(playerSpeed, 0, 0);
 			}
 			if(Input.GetKey(KeyCode.D)){
 				transform.Translate(playerSpeed, 0, 0);
+				if(transform.position.x + transform.renderer.bounds.size.x > GameObject.Find("PlayerZoneLimiter").transform.position.x)
+					transform.Translate(-playerSpeed, 0, 0);
 			}
 		}
 		else{
