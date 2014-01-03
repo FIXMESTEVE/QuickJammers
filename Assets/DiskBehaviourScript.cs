@@ -12,13 +12,17 @@ public class DiskBehaviourScript : MonoBehaviour {
 	public static bool relaunched = false;
 	public static DiskRelaunchState relaunchState = DiskRelaunchState.STRAIGHT;
 
+	private int p1Score = 0; private int p2Score = 0;
 	private float freezeTimer = 1;
+	private float recoveryTimer = 1.2f;
 	private float cSpeed = 20;
 	private Vector3 initTransformPos;
 	// Use this for initialization
 	void Start () {
-		initTransformPos = transform.position;
+		p1Hold = true;
 		rigidbody.AddForce(10, 0, 10);
+		GameObject.Find("Player1Score").guiText.text = "P1 Score: "+ p1Score.ToString();
+		GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString();
 	}
 
 	void freezeDisk(){
@@ -91,7 +95,17 @@ public class DiskBehaviourScript : MonoBehaviour {
 			freezeDisk();
 			p2Hold = true;
 		}
-		if(col.gameObject.name == "LeftBorder" || col.gameObject.name == "RightBorder")
-			transform.position = initTransformPos;
+
+		if(col.gameObject.name == "LeftBorder"){
+			p1Hold = true;
+			p2Score++;
+			GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString(); 
+		}
+
+		if(col.gameObject.name == "RightBorder"){
+			p2Hold = true;
+			p1Score++;
+			GameObject.Find("Player1Score").guiText.text = "P1 Score: "+ p1Score.ToString();
+		}
 	}
 }
