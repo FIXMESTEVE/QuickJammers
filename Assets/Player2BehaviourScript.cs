@@ -10,7 +10,7 @@ public class Player2BehaviourScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!DiskBehaviourScript.p1Hold){
+		if(!DiskBehaviourScript.p2Hold){
 			if(Input.GetKey(KeyCode.UpArrow)){
 				transform.Translate(0, 0, playerSpeed);
 			}

@@ -7,13 +7,12 @@ public class DiskBehaviourScript : MonoBehaviour {
 	public static bool p2Hold = false;
 
 	private float freezeTimer = 1;
-	private float cSpeed = 10;
-	private float sFactor = 10;
+	private float cSpeed = 12;
 	private Vector3 initTransformPos;
 	// Use this for initialization
 	void Start () {
 		initTransformPos = transform.position;
-		rigidbody.AddForce(12, 0, 12);
+		rigidbody.AddForce(10, 0, 10);
 	}
 
 	void freezeDisk(){
@@ -25,10 +24,10 @@ public class DiskBehaviourScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(p1Hold && freezeTimer <= 0){
-			p1Hold = false; freezeTimer = 1; rigidbody.AddForce(12, 0, 10); Debug.Log("Timer end!");
+			p1Hold = false; freezeTimer = 1; rigidbody.AddForce(10, 0, 10); Debug.Log("Timer end!");
 		}
 		else if(p2Hold && freezeTimer <= 0){
-			p2Hold = false; freezeTimer = 1; rigidbody.AddForce(-12, 0, -10); Debug.Log("Timer end!");
+			p2Hold = false; freezeTimer = 1; rigidbody.AddForce(-10, 0, -10); Debug.Log("Timer end!");
 		}
 
 
@@ -41,9 +40,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 			freezeTimer -= Time.deltaTime;
 		}
 		else if (!p1Hold && !p2Hold){
-			Vector3 cvel = rigidbody.velocity;
-			Vector3 tvel = cvel.normalized * cSpeed;
-			rigidbody.velocity = Vector3.Lerp(cvel, tvel, Time.deltaTime * sFactor);
+			rigidbody.velocity = rigidbody.velocity.normalized * cSpeed;
 		}
 	}
 
