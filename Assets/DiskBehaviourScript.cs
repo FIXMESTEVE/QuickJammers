@@ -1,13 +1,18 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
+
+public enum DiskRelaunchState{
+	STRAIGHT, DIAG_UP_SOFT, DIAG_DOWN_SOFT, DIAG_UP_HARD, DIAG_DOWN_HARD
+};
 
 public class DiskBehaviourScript : MonoBehaviour {
 
 	public static bool p1Hold = false;
 	public static bool p2Hold = false;
+	public static DiskRelaunchState relaunchState = DiskRelaunchState.STRAIGHT;
 
 	private float freezeTimer = 1;
-	private float cSpeed = 12;
+	private float cSpeed = 20;
 	private Vector3 initTransformPos;
 	// Use this for initialization
 	void Start () {
@@ -20,14 +25,38 @@ public class DiskBehaviourScript : MonoBehaviour {
 		rigidbody.angularVelocity = Vector3.zero;
 		rigidbody.Sleep();
 	}
-	
+
+	void relaunchDisk(){
+		if (relaunchState == DiskRelaunchState.STRAIGHT){
+			if(p1Hold)
+				rigidbody.AddForce(10, 0, 0);
+			else if (p2Hold) rigidbody.AddForce(-10, 0, 0); 
+		}
+		else if(relaunchState == DiskRelaunchState.DIAG_DOWN_HARD){
+			if(p1Hold)
+				rigidbody.AddForce(10, 0, -10);
+			else if (p2Hold) rigidbody.AddForce(-10, 0, -10);
+		}
+		else if(relaunchState == DiskRelaunchState.DIAG_UP_HARD){
+			if(p1Hold)
+				rigidbody.AddForce(10, 0, 10);
+			else if (p2Hold) rigidbody.AddForce(-10, 0, 10);
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if(p1Hold && freezeTimer <= 0){
-			p1Hold = false; freezeTimer = 1; rigidbody.AddForce(10, 0, 10); Debug.Log("Timer end!");
+			relaunchDisk();
+			p1Hold = false; freezeTimer = 1; 
+			//rigidbody.AddForce(10, 0, 10); 
+			Debug.Log("Timer end!");
 		}
 		else if(p2Hold && freezeTimer <= 0){
-			p2Hold = false; freezeTimer = 1; rigidbody.AddForce(-10, 0, -10); Debug.Log("Timer end!");
+			relaunchDisk();
+			p2Hold = false; freezeTimer = 1; 
+			//rigidbody.AddForce(-10, 0, -10); 
+			Debug.Log("Timer end!");
 		}
 
 

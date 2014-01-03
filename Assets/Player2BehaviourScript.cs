@@ -24,5 +24,13 @@ public class Player2BehaviourScript : MonoBehaviour {
 				transform.Translate(playerSpeed, 0, 0);
 			}
 		}
+		else{
+			if(Input.GetKey(KeyCode.UpArrow))
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_UP_HARD;
+			else if(Input.GetKey(KeyCode.DownArrow))
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_DOWN_HARD;
+			else
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.STRAIGHT;
+		}
 	}
 }

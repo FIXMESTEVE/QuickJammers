@@ -7,10 +7,7 @@ public class Player1BehaviourScript : MonoBehaviour {
 	void Start () {
 	
 	}
-
-	void CollisionsUpdate(){
-	}
-
+	
 	// Update is called once per frame
 	void Update () {
 		if(!DiskBehaviourScript.p1Hold){
@@ -27,6 +24,13 @@ public class Player1BehaviourScript : MonoBehaviour {
 				transform.Translate(playerSpeed, 0, 0);
 			}
 		}
-		CollisionsUpdate();
+		else{
+			if(Input.GetKey(KeyCode.Z))
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_UP_HARD;
+			else if(Input.GetKey(KeyCode.S))
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_DOWN_HARD;
+			else
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.STRAIGHT;
+		}
 	}
 }
