@@ -25,12 +25,19 @@ public class Player2BehaviourScript : MonoBehaviour {
 			}
 		}
 		else{
-			if(Input.GetKey(KeyCode.UpArrow))
+			if(Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.RightArrow))
 				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_UP_HARD;
-			else if(Input.GetKey(KeyCode.DownArrow))
+			else if(Input.GetKey(KeyCode.DownArrow) && !Input.GetKey(KeyCode.RightArrow))
 				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_DOWN_HARD;
+			else if(Input.GetKey(KeyCode.UpArrow) && Input.GetKey(KeyCode.RightArrow))
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_UP_SOFT;
+			else if(Input.GetKey(KeyCode.DownArrow) && !Input.GetKey(KeyCode.RightArrow))
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_DOWN_SOFT;
 			else
 				DiskBehaviourScript.relaunchState = DiskRelaunchState.STRAIGHT;
+
+			if(Input.GetKey(KeyCode.RightCommand))
+				DiskBehaviourScript.relaunched = true;
 		}
 	}
 }

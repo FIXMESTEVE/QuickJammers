@@ -9,6 +9,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 
 	public static bool p1Hold = false;
 	public static bool p2Hold = false;
+	public static bool relaunched = false;
 	public static DiskRelaunchState relaunchState = DiskRelaunchState.STRAIGHT;
 
 	private float freezeTimer = 1;
@@ -34,10 +35,20 @@ public class DiskBehaviourScript : MonoBehaviour {
 		}
 		else if(relaunchState == DiskRelaunchState.DIAG_DOWN_HARD){
 			if(p1Hold)
+				rigidbody.AddForce(10, 0, -15);
+			else if (p2Hold) rigidbody.AddForce(-10, 0, -15);
+		}
+		else if(relaunchState == DiskRelaunchState.DIAG_UP_HARD){
+			if(p1Hold)
+				rigidbody.AddForce(10, 0, 15);
+			else if (p2Hold) rigidbody.AddForce(-10, 0, 15);
+		}
+		else if(relaunchState == DiskRelaunchState.DIAG_DOWN_SOFT){
+			if(p1Hold)
 				rigidbody.AddForce(10, 0, -10);
 			else if (p2Hold) rigidbody.AddForce(-10, 0, -10);
 		}
-		else if(relaunchState == DiskRelaunchState.DIAG_UP_HARD){
+		else if(relaunchState == DiskRelaunchState.DIAG_UP_SOFT){
 			if(p1Hold)
 				rigidbody.AddForce(10, 0, 10);
 			else if (p2Hold) rigidbody.AddForce(-10, 0, 10);
@@ -46,20 +57,18 @@ public class DiskBehaviourScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(p1Hold && freezeTimer <= 0){
+		if((p1Hold && freezeTimer <= 0) || (p1Hold && relaunched)){
 			relaunchDisk();
-			p1Hold = false; freezeTimer = 1; 
-			//rigidbody.AddForce(10, 0, 10); 
+			p1Hold = false; freezeTimer = 1; relaunched =  false;
 			Debug.Log("Timer end!");
 		}
-		else if(p2Hold && freezeTimer <= 0){
+		else if((p2Hold && freezeTimer <= 0) || (p2Hold && relaunched)){
 			relaunchDisk();
-			p2Hold = false; freezeTimer = 1; 
-			//rigidbody.AddForce(-10, 0, -10); 
+			p2Hold = false; freezeTimer = 1; relaunched = false;
 			Debug.Log("Timer end!");
 		}
 
-
+		//If the player catches the ball, we position it in front of him
 		if(p1Hold){
 			transform.position = new Vector3(GameObject.Find("Player1").transform.position.x + 1.1f, transform.position.y, GameObject.Find("Player1").transform.position.z);
 			freezeTimer -= Time.deltaTime;
