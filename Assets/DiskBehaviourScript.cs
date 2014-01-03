@@ -29,7 +29,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		p1Hold = true;
-		rigidbody.AddForce(10, 0, 10);
+		//rigidbody.AddForce(10, 0, 10);
 		GameObject.Find("Player1Score").guiText.text = "P1 Score: "+ p1Score.ToString();
 		GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString();
 	}
@@ -44,27 +44,32 @@ public class DiskBehaviourScript : MonoBehaviour {
 		if (relaunchState == DiskRelaunchState.STRAIGHT){
 			if(p1Hold)
 				rigidbody.AddForce(10, 0, 0);
-			else if (p2Hold) rigidbody.AddForce(-10, 0, 0); 
+			else if (p2Hold)
+				rigidbody.AddForce(-10, 0, 0); 
 		}
 		else if(relaunchState == DiskRelaunchState.DIAG_DOWN_HARD){
 			if(p1Hold)
 				rigidbody.AddForce(10, 0, -15);
-			else if (p2Hold) rigidbody.AddForce(-10, 0, -15);
+			else if (p2Hold)
+				rigidbody.AddForce(-10, 0, -15);
 		}
 		else if(relaunchState == DiskRelaunchState.DIAG_UP_HARD){
 			if(p1Hold)
 				rigidbody.AddForce(10, 0, 15);
-			else if (p2Hold) rigidbody.AddForce(-10, 0, 15);
+			else if (p2Hold)
+				rigidbody.AddForce(-10, 0, 15);
 		}
 		else if(relaunchState == DiskRelaunchState.DIAG_DOWN_SOFT){
 			if(p1Hold)
 				rigidbody.AddForce(10, 0, -10);
-			else if (p2Hold) rigidbody.AddForce(-10, 0, -10);
+			else if (p2Hold) 
+				rigidbody.AddForce(-10, 0, -10);
 		}
 		else if(relaunchState == DiskRelaunchState.DIAG_UP_SOFT){
 			if(p1Hold)
 				rigidbody.AddForce(10, 0, 10);
-			else if (p2Hold) rigidbody.AddForce(-10, 0, 10);
+			else if (p2Hold)
+				rigidbody.AddForce(-10, 0, 10);
 		}
 	}
 
@@ -74,6 +79,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 			p1Recovery = true;
 			relaunchDisk();
 			p1Hold = false;
+			relaunchState = DiskRelaunchState.STRAIGHT;
 			freezeTimer = 1;
 			relaunched = false;
 			Debug.Log("p1Hold timer end!");
@@ -82,6 +88,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 			p2Recovery = true;
 			relaunchDisk();
 			p2Hold = false;
+			relaunchState = DiskRelaunchState.STRAIGHT;
 			freezeTimer = 1;
 			relaunched = false;
 			Debug.Log("p2Hold timer end!");
@@ -132,13 +139,15 @@ public class DiskBehaviourScript : MonoBehaviour {
 		if(col.gameObject.name == "LeftBorder"){
 			p1Hold = true;
 			p2Score++;
-			GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString(); 
+			GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString();
+			relaunchState = DiskRelaunchState.STRAIGHT;
 		}
 
 		if(col.gameObject.name == "RightBorder"){
 			p2Hold = true;
 			p1Score++;
 			GameObject.Find("Player1Score").guiText.text = "P1 Score: "+ p1Score.ToString();
+			relaunchState = DiskRelaunchState.STRAIGHT;
 		}
 	}
 }
