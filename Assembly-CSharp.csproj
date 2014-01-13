@@ -49,6 +49,11 @@
      <Compile Include="Assets\DiskBehaviourScript.cs" />
      <Compile Include="Assets\Player1BehaviourScript.cs" />
      <Compile Include="Assets\Player2BehaviourScript.cs" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{807E732E-18AC-EC83-C63B-FF61313D899F}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

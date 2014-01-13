@@ -18,6 +18,10 @@ public class DiskBehaviourScript : MonoBehaviour {
 	//scores
 	private int p1Score = 0; private int p2Score = 0;
 
+	//prefabs
+	public GameObject explosion;
+	public GameObject wallBounceSparks;
+
 	//timers
 	private float freezeTimer = 1;
 	private float p1RecoveryTimer = 0.2f;
@@ -35,12 +39,14 @@ public class DiskBehaviourScript : MonoBehaviour {
 	}
 
 	void freezeDisk(){
-		rigidbody.velocity = Vector3.zero;
+		/*rigidbody.velocity = Vector3.zero;
 		rigidbody.angularVelocity = Vector3.zero;
-		rigidbody.Sleep();
+		rigidbody.Sleep();*/
+		rigidbody.isKinematic = true;
 	}
 
 	void relaunchDisk(){
+		gameObject.GetComponent<TrailRenderer>().enabled=true;
 		if (relaunchState == DiskRelaunchState.STRAIGHT){
 			if(p1Hold)
 				rigidbody.AddForce(10, 0, 0);
@@ -71,32 +77,53 @@ public class DiskBehaviourScript : MonoBehaviour {
 			else if (p2Hold)
 				rigidbody.AddForce(-10, 0, 10);
 		}
+
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if((p1Hold && freezeTimer <= 0) || (p1Hold && relaunched)){
-			p1Recovery = true;
-			relaunchDisk();
-			p1Hold = false;
-			relaunchState = DiskRelaunchState.STRAIGHT;
-			freezeTimer = 1;
-			relaunched = false;
-			Debug.Log("p1Hold timer end!");
+		//If the player catches the ball, we position it in front of him
+		if(p1Hold){
+			freezeDisk();
+			transform.position = new Vector3(GameObject.Find("Player1").transform.position.x + 1.2f, transform.position.y, GameObject.Find("Player1").transform.position.z);
+			freezeTimer -= Time.deltaTime;
 		}
-		else if((p2Hold && freezeTimer <= 0) || (p2Hold && relaunched)){
-			p2Recovery = true;
-			relaunchDisk();
-			p2Hold = false;
-			relaunchState = DiskRelaunchState.STRAIGHT;
-			freezeTimer = 1;
-			relaunched = false;
-			Debug.Log("p2Hold timer end!");
+		else if(p2Hold){
+			freezeDisk();
+			transform.position = new Vector3(GameObject.Find("Player2").transform.position.x - 1.2f, transform.position.y, GameObject.Find("Player2").transform.position.z);
+			freezeTimer -= Time.deltaTime;
+		}
+		else if (!p1Hold && !p2Hold){
+			rigidbody.velocity = rigidbody.velocity.normalized * cSpeed;
+		}
+
+		if(p1Hold){
+			if(freezeTimer <= 0 || relaunched){
+				rigidbody.isKinematic = false;
+				p1Recovery = true;
+				relaunchDisk();
+				p1Hold = false;
+				freezeTimer = 1;
+				relaunched = false;
+				//Debug.Log("p1Hold timer end!");
+			}
+		}
+		else if(p2Hold){
+			if(freezeTimer <= 0 || relaunched){
+				rigidbody.isKinematic = false;
+				p2Recovery = true;
+				relaunchDisk();
+				p2Hold = false;
+				freezeTimer = 1;
+				relaunched = false;
+				//Debug.Log("p2Hold timer end!");
+			}
 		}
 
 		if(p1Recovery){
-			if(p1RecoveryTimer > 0)
+			if(p1RecoveryTimer > 0){
 				p1RecoveryTimer -= Time.deltaTime;
+			}
 			else{
 				p1Recovery = false;
 				p1RecoveryTimer = 0.2f;
@@ -104,50 +131,48 @@ public class DiskBehaviourScript : MonoBehaviour {
 		}
 
 		if(p2Recovery){
-			if(p2RecoveryTimer > 0)
+			if(p2RecoveryTimer > 0){
 				p2RecoveryTimer -= Time.deltaTime;
+			}
 			else{
 				p2Recovery = false;
 				p2RecoveryTimer = 0.2f;
 			}
 		}
 
-		//If the player catches the ball, we position it in front of him
-		if(p1Hold){
-			transform.position = new Vector3(GameObject.Find("Player1").transform.position.x + 1.1f, transform.position.y, GameObject.Find("Player1").transform.position.z);
-			freezeTimer -= Time.deltaTime;
-		}
-		else if(p2Hold){
-			transform.position = new Vector3(GameObject.Find("Player2").transform.position.x - 1.1f, transform.position.y, GameObject.Find("Player2").transform.position.z);
-			freezeTimer -= Time.deltaTime;
-		}
-		else if (!p1Hold && !p2Hold){
-			rigidbody.velocity = rigidbody.velocity.normalized * cSpeed;
-		}
+		Debug.Log ("p1Hold: " + p1Hold + "; p2Hold: " + p2Hold + "; p1Recovery: " + p1Recovery +
+		           "; p2Recovery: " + p2Recovery + "; relaunched: " + relaunched );
+		           //"; p1RecoveryTimer: " + (p1RecoveryTimer) + 
+		           //"; p2RecoveryTimer: " + (p2RecoveryTimer) + "; freezeTimer: " + freezeTimer);
 	}
 
 	void OnCollisionEnter (Collision col){
 		if(col.gameObject.name == "Player1" ){
-			freezeDisk();
+
 			p1Hold = true;
 		}
 		if(col.gameObject.name == "Player2" ){
-			freezeDisk();
+			//freezeDisk();
 			p2Hold = true;
 		}
 
 		if(col.gameObject.name == "LeftBorder"){
+			gameObject.GetComponent<TrailRenderer>().enabled=false;
+			Instantiate(explosion, transform.position, transform.rotation);
 			p1Hold = true;
 			p2Score++;
 			GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString();
-			relaunchState = DiskRelaunchState.STRAIGHT;
 		}
 
 		if(col.gameObject.name == "RightBorder"){
+			gameObject.GetComponent<TrailRenderer>().enabled=false; 
+			Instantiate(explosion, transform.position, transform.rotation);
 			p2Hold = true;
 			p1Score++;
 			GameObject.Find("Player1Score").guiText.text = "P1 Score: "+ p1Score.ToString();
-			relaunchState = DiskRelaunchState.STRAIGHT;
 		}
+
+		if(col.gameObject.name == "TopBorder" || col.gameObject.name == "BottomBorder")
+			Instantiate(wallBounceSparks, transform.position, transform.rotation);
 	}
 }

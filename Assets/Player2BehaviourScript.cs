@@ -32,7 +32,7 @@ public class Player2BehaviourScript : MonoBehaviour {
 					transform.Translate (-playerSpeed, 0, 0);
 			}
 		}
-		else{
+		else if(DiskBehaviourScript.p2Hold){
 			if(Input.GetKey(KeyCode.UpArrow) && !Input.GetKey(KeyCode.LeftArrow))
 				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_UP_HARD;
 			else if(Input.GetKey(KeyCode.DownArrow) && !Input.GetKey(KeyCode.LeftArrow))

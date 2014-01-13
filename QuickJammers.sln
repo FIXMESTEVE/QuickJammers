@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 
 Project("{56F361E0-5DAB-7530-7EBB-C35895DF7AA6}") = "QuickJammers", "Assembly-CSharp.csproj", "{E46536C0-FCAD-0ACA-C191-875DCE943B77}"
 EndProject
+Project("{56F361E0-5DAB-7530-7EBB-C35895DF7AA6}") = "QuickJammers", "Assembly-UnityScript-firstpass.unityproj", "{807E732E-18AC-EC83-C63B-FF61313D899F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,11 +15,15 @@ Global
 		{E46536C0-FCAD-0ACA-C191-875DCE943B77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E46536C0-FCAD-0ACA-C191-875DCE943B77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E46536C0-FCAD-0ACA-C191-875DCE943B77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{807E732E-18AC-EC83-C63B-FF61313D899F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{807E732E-18AC-EC83-C63B-FF61313D899F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{807E732E-18AC-EC83-C63B-FF61313D899F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{807E732E-18AC-EC83-C63B-FF61313D899F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																GlobalSection(MonoDevelopProperties) = preSolution
+																					GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
