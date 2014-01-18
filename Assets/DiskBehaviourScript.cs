@@ -23,17 +23,22 @@ public class DiskBehaviourScript : MonoBehaviour {
 	public GameObject wallBounceSparks;
 
 	//timers
+	private float initTimer;
 	private float freezeTimer = 1;
 	private float p1RecoveryTimer = 0.2f;
 	private float p2RecoveryTimer = 0.2f;
-	
+
 	private float cSpeed = 20;
+	private float initSpeed;
 	private Vector3 initTransformPos;
 
 	// Use this for initialization
 	void Start () {
 		p1Hold = true;
-		//rigidbody.AddForce(10, 0, 10);
+		initSpeed = cSpeed;
+		initTimer = freezeTimer;
+		transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = false;
+		gameObject.GetComponent<TrailRenderer>().enabled=false;
 		GameObject.Find("Player1Score").guiText.text = "P1 Score: "+ p1Score.ToString();
 		GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString();
 	}
@@ -46,10 +51,11 @@ public class DiskBehaviourScript : MonoBehaviour {
 	}
 
 	void relaunchDisk(){
-		gameObject.GetComponent<TrailRenderer>().enabled=true;
+		rigidbody.isKinematic = false;
 		if (relaunchState == DiskRelaunchState.STRAIGHT){
-			if(p1Hold)
+			if(p1Hold){
 				rigidbody.AddForce(10, 0, 0);
+			}
 			else if (p2Hold)
 				rigidbody.AddForce(-10, 0, 0); 
 		}
@@ -77,18 +83,37 @@ public class DiskBehaviourScript : MonoBehaviour {
 			else if (p2Hold)
 				rigidbody.AddForce(-10, 0, 10);
 		}
-
+		Debug.Log (freezeTimer);
+		if(freezeTimer > initTimer - initTimer/20){ //todo: save the initial timer
+			cSpeed = initSpeed + 5;
+			transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = true;
+			gameObject.GetComponent<TrailRenderer>().enabled=false;
+		}
+		else if(freezeTimer < initTimer/2){
+			transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = false;
+			gameObject.GetComponent<TrailRenderer>().enabled=false;
+			cSpeed = (float)(initSpeed/1.5);
+		}
+		else{
+			transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = false;
+			gameObject.GetComponent<TrailRenderer>().enabled=true;
+			cSpeed = (float)(initSpeed * freezeTimer * 1.1);
+		}
 	}
 
 	// Update is called once per frame
 	void Update () {
 		//If the player catches the ball, we position it in front of him
 		if(p1Hold){
+			transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = false;
+			gameObject.GetComponent<TrailRenderer>().enabled=false;
 			freezeDisk();
 			transform.position = new Vector3(GameObject.Find("Player1").transform.position.x + 1.2f, transform.position.y, GameObject.Find("Player1").transform.position.z);
 			freezeTimer -= Time.deltaTime;
 		}
 		else if(p2Hold){
+			transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = false;
+			gameObject.GetComponent<TrailRenderer>().enabled=false;
 			freezeDisk();
 			transform.position = new Vector3(GameObject.Find("Player2").transform.position.x - 1.2f, transform.position.y, GameObject.Find("Player2").transform.position.z);
 			freezeTimer -= Time.deltaTime;
@@ -99,7 +124,6 @@ public class DiskBehaviourScript : MonoBehaviour {
 
 		if(p1Hold){
 			if(freezeTimer <= 0 || relaunched){
-				rigidbody.isKinematic = false;
 				p1Recovery = true;
 				relaunchDisk();
 				p1Hold = false;
@@ -110,7 +134,6 @@ public class DiskBehaviourScript : MonoBehaviour {
 		}
 		else if(p2Hold){
 			if(freezeTimer <= 0 || relaunched){
-				rigidbody.isKinematic = false;
 				p2Recovery = true;
 				relaunchDisk();
 				p2Hold = false;
@@ -148,7 +171,6 @@ public class DiskBehaviourScript : MonoBehaviour {
 
 	void OnCollisionEnter (Collision col){
 		if(col.gameObject.name == "Player1" ){
-
 			p1Hold = true;
 		}
 		if(col.gameObject.name == "Player2" ){
@@ -157,7 +179,6 @@ public class DiskBehaviourScript : MonoBehaviour {
 		}
 
 		if(col.gameObject.name == "LeftBorder"){
-			gameObject.GetComponent<TrailRenderer>().enabled=false;
 			Instantiate(explosion, transform.position, transform.rotation);
 			p1Hold = true;
 			p2Score++;
@@ -165,7 +186,6 @@ public class DiskBehaviourScript : MonoBehaviour {
 		}
 
 		if(col.gameObject.name == "RightBorder"){
-			gameObject.GetComponent<TrailRenderer>().enabled=false; 
 			Instantiate(explosion, transform.position, transform.rotation);
 			p2Hold = true;
 			p1Score++;
