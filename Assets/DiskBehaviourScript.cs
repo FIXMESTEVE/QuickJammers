@@ -31,12 +31,18 @@ public class DiskBehaviourScript : MonoBehaviour {
 	private float cSpeed = 20;
 	private float initSpeed;
 	private Vector3 initTransformPos;
+	private Vector3 p1InitTransformPos;
+	private Vector3 p2InitTransformPos;
+
+
 
 	// Use this for initialization
 	void Start () {
 		p1Hold = true;
 		initSpeed = cSpeed;
 		initTimer = freezeTimer;
+		p1InitTransformPos = GameObject.Find("Player1").transform.position;
+		p2InitTransformPos = GameObject.Find("Player2").transform.position;
 		transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = false;
 		gameObject.GetComponent<TrailRenderer>().enabled=false;
 		GameObject.Find("Player1Score").guiText.text = "P1 Score: "+ p1Score.ToString();
@@ -83,9 +89,10 @@ public class DiskBehaviourScript : MonoBehaviour {
 			else if (p2Hold)
 				rigidbody.AddForce(-10, 0, 10);
 		}
-		Debug.Log (freezeTimer);
-		if(freezeTimer > initTimer - initTimer/20){ //todo: save the initial timer
-			cSpeed = initSpeed + 5;
+		//Debug.Log (freezeTimer);
+		if(freezeTimer > initTimer - initTimer/20){
+			if(cSpeed < initSpeed) cSpeed = initSpeed;
+			cSpeed += 10;
 			transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = true;
 			gameObject.GetComponent<TrailRenderer>().enabled=false;
 		}
@@ -97,7 +104,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 		else{
 			transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = false;
 			gameObject.GetComponent<TrailRenderer>().enabled=true;
-			cSpeed = (float)(initSpeed * freezeTimer * 1.1);
+			cSpeed = (float)(initSpeed * freezeTimer * 1.3);
 		}
 	}
 
@@ -109,20 +116,21 @@ public class DiskBehaviourScript : MonoBehaviour {
 			gameObject.GetComponent<TrailRenderer>().enabled=false;
 			freezeDisk();
 			transform.position = new Vector3(GameObject.Find("Player1").transform.position.x + 1.2f, transform.position.y, GameObject.Find("Player1").transform.position.z);
-			freezeTimer -= Time.deltaTime;
+
 		}
 		else if(p2Hold){
 			transform.Find ("JustFrameRelaunchTrail").GetComponent<TrailRenderer>().enabled = false;
 			gameObject.GetComponent<TrailRenderer>().enabled=false;
 			freezeDisk();
 			transform.position = new Vector3(GameObject.Find("Player2").transform.position.x - 1.2f, transform.position.y, GameObject.Find("Player2").transform.position.z);
-			freezeTimer -= Time.deltaTime;
+
 		}
 		else if (!p1Hold && !p2Hold){
 			rigidbody.velocity = rigidbody.velocity.normalized * cSpeed;
 		}
 
-		if(p1Hold){
+		if(p1Hold && !Player1BehaviourScript.dashing){
+			freezeTimer -= Time.deltaTime;
 			if(freezeTimer <= 0 || relaunched){
 				p1Recovery = true;
 				relaunchDisk();
@@ -133,6 +141,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 			}
 		}
 		else if(p2Hold){
+			freezeTimer -= Time.deltaTime;
 			if(freezeTimer <= 0 || relaunched){
 				p2Recovery = true;
 				relaunchDisk();
@@ -163,8 +172,8 @@ public class DiskBehaviourScript : MonoBehaviour {
 			}
 		}
 
-		Debug.Log ("p1Hold: " + p1Hold + "; p2Hold: " + p2Hold + "; p1Recovery: " + p1Recovery +
-		           "; p2Recovery: " + p2Recovery + "; relaunched: " + relaunched );
+		//Debug.Log ("p1Hold: " + p1Hold + "; p2Hold: " + p2Hold + "; p1Recovery: " + p1Recovery +
+		//           "; p2Recovery: " + p2Recovery + "; relaunched: " + relaunched );
 		           //"; p1RecoveryTimer: " + (p1RecoveryTimer) + 
 		           //"; p2RecoveryTimer: " + (p2RecoveryTimer) + "; freezeTimer: " + freezeTimer);
 	}
@@ -180,6 +189,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 
 		if(col.gameObject.name == "LeftBorder"){
 			Instantiate(explosion, transform.position, transform.rotation);
+			GameObject.Find("Player1").transform.position = p1InitTransformPos;
 			p1Hold = true;
 			p2Score++;
 			GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString();
@@ -187,6 +197,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 
 		if(col.gameObject.name == "RightBorder"){
 			Instantiate(explosion, transform.position, transform.rotation);
+			GameObject.Find("Player2").transform.position = p2InitTransformPos;
 			p2Hold = true;
 			p1Score++;
 			GameObject.Find("Player1Score").guiText.text = "P1 Score: "+ p1Score.ToString();
