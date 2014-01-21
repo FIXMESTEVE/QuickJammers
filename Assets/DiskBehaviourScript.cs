@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public enum DiskRelaunchState{
-	STRAIGHT, DIAG_UP_SOFT, DIAG_DOWN_SOFT, DIAG_UP_HARD, DIAG_DOWN_HARD
+	STRAIGHT, DIAG_UP_SOFT, DIAG_DOWN_SOFT, DIAG_UP_HARD, DIAG_DOWN_HARD, LOB
 };
 
 public class DiskBehaviourScript : MonoBehaviour {
@@ -21,6 +21,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 	//prefabs
 	public GameObject explosion;
 	public GameObject wallBounceSparks;
+	public GameObject ballCatchShockwave;
 
 	//timers
 	private float initTimer;
@@ -88,6 +89,11 @@ public class DiskBehaviourScript : MonoBehaviour {
 				rigidbody.AddForce(10, 0, 10);
 			else if (p2Hold)
 				rigidbody.AddForce(-10, 0, 10);
+		}
+		else if(relaunchState == DiskRelaunchState.LOB){
+			//TODO: CODE THAT LOB
+			rigidbody.AddForce(0.8f, 10.2f, 0);
+			rigidbody.useGravity = true;
 		}
 		//Debug.Log (freezeTimer);
 		if(freezeTimer > initTimer - initTimer/20){
@@ -180,16 +186,19 @@ public class DiskBehaviourScript : MonoBehaviour {
 
 	void OnCollisionEnter (Collision col){
 		if(col.gameObject.name == "Player1" ){
+			Instantiate(ballCatchShockwave, transform.position, transform.rotation);
 			p1Hold = true;
 		}
 		if(col.gameObject.name == "Player2" ){
-			//freezeDisk();
+			Instantiate(ballCatchShockwave, transform.position, transform.rotation);
 			p2Hold = true;
 		}
 
 		if(col.gameObject.name == "LeftBorder"){
 			Instantiate(explosion, transform.position, transform.rotation);
 			GameObject.Find("Player1").transform.position = p1InitTransformPos;
+			
+			GameObject.Find("Player2").transform.position = p2InitTransformPos;
 			p1Hold = true;
 			p2Score++;
 			GameObject.Find("Player2Score").guiText.text = "P2 Score: "+ p2Score.ToString();
@@ -197,6 +206,7 @@ public class DiskBehaviourScript : MonoBehaviour {
 
 		if(col.gameObject.name == "RightBorder"){
 			Instantiate(explosion, transform.position, transform.rotation);
+			GameObject.Find("Player1").transform.position = p1InitTransformPos;
 			GameObject.Find("Player2").transform.position = p2InitTransformPos;
 			p2Hold = true;
 			p1Score++;

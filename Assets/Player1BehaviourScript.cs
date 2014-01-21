@@ -107,6 +107,10 @@ public class Player1BehaviourScript : MonoBehaviour {
 			else if(Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.D)){
 				DiskBehaviourScript.relaunchState = DiskRelaunchState.DIAG_DOWN_SOFT;
 			}
+			else if (Input.GetKey(KeyCode.E) && !dashing){
+				DiskBehaviourScript.relaunchState = DiskRelaunchState.LOB;
+				DiskBehaviourScript.relaunched = true;
+			}
 			else{
 				DiskBehaviourScript.relaunchState = DiskRelaunchState.STRAIGHT;
 			}
